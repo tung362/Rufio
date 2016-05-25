@@ -1,0 +1,149 @@
+fileFormatVersion: 2
+guid: dab0607605e8cf240ab05210ec0853a7
+timeCreated: 1463801001
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Body_O
+    100002: Head
+    100004: Head_Top
+    100006: Hip
+    100008: Left_Bottom_Arm
+    100010: Left_Bottom_Leg
+    100012: Left_Foot
+    100014: Left_Palm
+    100016: Left_Shoulder
+    100018: Left_Toe
+    100020: Left_Upper_Arm
+    100022: Left_Upper_Leg
+    100024: Neck1
+    100026: Neck2
+    100028: //RootNode
+    100030: Right_Bottom_Arm
+    100032: Right_Bottom_Leg
+    100034: Right_Foot
+    100036: Right_Palm
+    100038: Right_Shoulder
+    100040: Right_Toe
+    100042: Right_Upper_Arm
+    100044: Right_Upper_Leg
+    100046: Spine1
+    100048: Spine2
+    100050: Sword_Blade
+    100052: Sword_Guard
+    100054: Sword_Handle
+    100056: Sword_Sheath
+    100058: Sword_Sheath_Top
+    400000: Body_O
+    400002: Head
+    400004: Head_Top
+    400006: Hip
+    400008: Left_Bottom_Arm
+    400010: Left_Bottom_Leg
+    400012: Left_Foot
+    400014: Left_Palm
+    400016: Left_Shoulder
+    400018: Left_Toe
+    400020: Left_Upper_Arm
+    400022: Left_Upper_Leg
+    400024: Neck1
+    400026: Neck2
+    400028: //RootNode
+    400030: Right_Bottom_Arm
+    400032: Right_Bottom_Leg
+    400034: Right_Foot
+    400036: Right_Palm
+    400038: Right_Shoulder
+    400040: Right_Toe
+    400042: Right_Upper_Arm
+    400044: Right_Upper_Leg
+    400046: Spine1
+    400048: Spine2
+    400050: Sword_Blade
+    400052: Sword_Guard
+    400054: Sword_Handle
+    400056: Sword_Sheath
+    400058: Sword_Sheath_Top
+    2300000: Sword_Blade
+    2300002: Sword_Guard
+    2300004: Sword_Handle
+    2300006: Sword_Sheath
+    2300008: Sword_Sheath_Top
+    3300000: Sword_Blade
+    3300002: Sword_Guard
+    3300004: Sword_Handle
+    3300006: Sword_Sheath
+    3300008: Sword_Sheath_Top
+    4300000: Body_O
+    4300002: Sword_Handle
+    4300004: Sword_Guard
+    4300006: Sword_Blade
+    4300008: Sword_Sheath
+    4300010: Sword_Sheath_Top
+    9500000: //RootNode
+    13700000: Body_O
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
