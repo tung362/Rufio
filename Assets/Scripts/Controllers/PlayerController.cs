@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public int TeleportID = 0; //The id of the animation state thats about to teleport
     private GameObject StrafeTarget;
     private Vector3 TeleportDestination = new Vector3(0, 0, 0);
+    private Vector3 TeleportMovement = new Vector3(0, 0, 0);
     private bool TeleportDestinationReached = true;
     public GameObject Camera;
     private Rigidbody TheRigidbody;
@@ -103,7 +104,8 @@ public class PlayerController : MonoBehaviour
         //Is it currently teleporting?
         if(TeleportDestinationReached == false)
         {
-            if(Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), TeleportDestination) <= 1)
+            TheRigidbody.velocity = TeleportMovement;
+            if (Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), TeleportDestination) <= 4)
             {
                 TeleportDestinationReached = true;
                 TheRigidbody.velocity = new Vector3(0, 0, 0);
@@ -126,13 +128,13 @@ public class PlayerController : MonoBehaviour
             if (TeleportID == 1)
             {
                 TeleportDestination = new Vector3(transform.position.x + (transform.forward.x * 9), 0, transform.position.z + (transform.forward.z * 9));
-                TheRigidbody.velocity = new Vector3(transform.forward.x, 0, transform.forward.z) * 80;
+                TeleportMovement = new Vector3(transform.forward.x, 0, transform.forward.z) * 80;
                 gameObject.layer = LayerMask.NameToLayer("DodgeGhost"); //Ghost
             }
             else if (TeleportID >= 2)
             {
                 TeleportDestination = new Vector3(transform.position.x + (transform.forward.x * 7), 0, transform.position.z + (transform.forward.z * 7));
-                TheRigidbody.velocity = new Vector3(transform.forward.x, 0, transform.forward.z) * 40;
+                TeleportMovement = new Vector3(transform.forward.x, 0, transform.forward.z) * 30;
                 //TheRigidbody.velocity = new Vector3(transform.forward.x, 0, transform.forward.z) * 30;
             }
              TeleportID = 0;
