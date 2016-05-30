@@ -32,14 +32,16 @@ public class BasicBrain : MonoBehaviour
     protected int st_EnemiesInSight; //How many enemies can I see?
     protected Vector3 st_PlayerLocation() { return ro_Player.transform.position; } //One-way access to the player's location
 
+    private Vector3 st_TargetDirection(Vector3 target) { return (target - transform.position).normalized; }
     private int st_EnemyCount; //Keeps track of the amount enemies in the current scene, not for use by AI directly.
     /* RAW OBJECTS */
     private GameObject ro_Player; //Player data is NOT directly accessable by the AI, it must go thorugh one-way access functions. Yay data protection!!   
+    protected Rigidbody ro_Me; //Rigidbody attached to the AI
 
     /* STATE FUNCTIONS */
     private bool isPlayerInSight()
     {
-        if (Vector3.Angle(transform.forward, st_PlayerLocation()) <= 45.0f) return true;
+        if (Mathf.Abs(Vector3.Angle(transform.forward, st_PlayerLocation())) <= 45.0f) return true;
         return false;
     }
 
@@ -59,23 +61,28 @@ public class BasicBrain : MonoBehaviour
             case PlayerRelationship.ENEMY:
                 //This part is gross, but it works.
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Friend");
-                if(enemies[0] != null) for(st_EnemyCount = 0; st_EnemyCount < enemies.Length - 1; st_EnemyCount++); // <- Don't kill me for this
-                st_EnemyCount++; //Adds player to enemy count
+                if (enemies != null)
+                {
+                    for (st_EnemyCount = 0; st_EnemyCount < enemies.Length - 1; st_EnemyCount++) ; // <- Don't kill me for this
+                    for (int a = st_EnemiesInSight; a < st_EnemyCount; a++)
+                        if (Mathf.Abs(Vector3.Angle(enemies[a].transform.position, transform.forward)) <= 45.0f)
+                        { st_EnemiesInSight++; s_CanSeeEnemy = true; }
+                }
 
-                for (int a = st_EnemiesInSight; a < st_EnemyCount; a++)
-                    if (Vector3.Angle(enemies[a].transform.position, transform.forward) <= 45.0f)
-                    { st_EnemiesInSight++; s_CanSeeEnemy = true; }
+                st_EnemyCount++; //Adds player to enemy count
                 if (s_CanSeePlayer) { s_CanSeeEnemy = true; st_EnemiesInSight++; } //++ Always accounts for the player, since they will never be in enemies[]. MAGIC!!
                 break;
             case PlayerRelationship.FREIND:
                 //Same drek from ENEMY case, but this adds the player's enemies.
                 GameObject[] enemies2 = GameObject.FindGameObjectsWithTag("Enemy");
-                if (enemies2[0] != null) for (st_EnemyCount = 0; st_EnemyCount < enemies2.Length - 1; st_EnemyCount++);
+                if (enemies2 != null)
+                {
+                    for (st_EnemyCount = 0; st_EnemyCount < enemies2.Length - 1; st_EnemyCount++) ;
 
-                for (int a = st_EnemiesInSight; a < st_EnemyCount; a++)
-                    if (Vector3.Angle(enemies2[a].transform.position, transform.forward) <= 45.0f)
-                    { st_EnemiesInSight++; s_CanSeeEnemy = true; }
-
+                    for (int a = st_EnemiesInSight; a < st_EnemyCount; a++)
+                        if (Vector3.Angle(enemies2[a].transform.position, transform.forward) <= 45.0f)
+                        { st_EnemiesInSight++; s_CanSeeEnemy = true; }
+                }
                 break;
             case PlayerRelationship.NEUTRAL:  break; //Don't got's nothin' fo' dis behaviour yet.
         }
@@ -83,8 +90,8 @@ public class BasicBrain : MonoBehaviour
 
     void setCurrentAttitude()
     {
-        
-
+        if (s_CurrentRelationship == PlayerRelationship.ENEMY && s_CanSeePlayer) s_CurrentAttitude = PlayerAttitude.HOSTILE;
+        else s_CurrentAttitude = PlayerAttitude.IDLE;
     }
      
 
@@ -96,18 +103,25 @@ public class BasicBrain : MonoBehaviour
         s_CurrentRelationship = DefaultRelationship;
         st_Speed = BaseSpeed;
         st_Damage = BaseDamage;
+        ro_Me = GetComponent<Rigidbody>();
+        ro_Player = GameObject.FindGameObjectWithTag("Player");
     }
 
 
     void Update()
     {
         setObservatioinalData();
+        setCurrentAttitude();
+    }
 
-        switch (s_CurrentAttitude)
+    void FixedUpdate()
+    {
+        if (s_CurrentAttitude == PlayerAttitude.HOSTILE && s_CanSeePlayer)
         {
-            case PlayerAttitude.ALERT: break;
-            case PlayerAttitude.HOSTILE: break;
-            case PlayerAttitude.IDLE: break;
+            ro_Me.AddForce(st_TargetDirection(st_PlayerLocation()) * st_Speed);
+            Debug.Log("I SEE YOU~! " + st_Speed);
         }
+        Debug.DrawLine(transform.position, transform.position + transform.forward);
+
     }
 }
