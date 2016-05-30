@@ -52,8 +52,13 @@ public class PlayerManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        PC.Control();
+        PA.Fall();
         PA.Animate();
+        PC.Control();
+    }
+
+    void LateUpdate()
+    {
     }
 
     void Inputs()
@@ -64,7 +69,7 @@ public class PlayerManager : MonoBehaviour
         RIGHT = Input.GetButton("Right");
         LOCKON = Input.GetButtonDown("LockOn");
         DODGE = Input.GetButtonDown("Dodge");
-        BLOCK = Input.GetButtonDown("Block");
+        BLOCK = Input.GetButton("Block");
         ATTACK = Input.GetButton("Attack");
         WEAPON1 = Input.GetButtonDown("Weapon1");
         WEAPON2 = Input.GetButtonDown("Weapon2");

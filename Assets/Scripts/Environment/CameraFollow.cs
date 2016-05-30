@@ -11,7 +11,6 @@ public class CameraFollow : MonoBehaviour
     public Vector2 FollowOffsetRange = new Vector2(-2, 2);
     private GameObject target;
     private Vector3 Velo = Vector3.zero;
-    private Vector3 CurrentTargetPosition = new Vector3(0, 0, 0);
     private Vector3 CamTargetDifference;
 
     //Camera Rotation Follow
@@ -26,7 +25,6 @@ public class CameraFollow : MonoBehaviour
     void Start()
     {
         Tracker = GameObject.Find("LevelTracker").GetComponent<LevelTracker>();
-        CurrentTargetPosition = transform.position;
     }
 
     void FixedUpdate()
@@ -55,14 +53,14 @@ public class CameraFollow : MonoBehaviour
             if (Tracker.StartCamShake == true)
             {
                 if (RunOnce == true) RunOnce = false;
-                transform.position = new Vector3(CurrentTargetPosition.x, CurrentTargetPosition.y, CurrentTargetPosition.z);
+                transform.position = Vector3.SmoothDamp(transform.position, target.transform.position + CamTargetDifference, ref Velo, FollowSmoothness);
                 transform.position = new Vector3(transform.position.x + Random.Range(Tracker.CamShakePower.x, Tracker.CamShakePower.y), transform.position.y + Random.Range(Tracker.CamShakePower.x, Tracker.CamShakePower.y), transform.position.z + Random.Range(Tracker.CamShakePower.x, Tracker.CamShakePower.y));
             }
             else
             {
                 if (RunOnce == false)
                 {
-                    transform.position = new Vector3(CurrentTargetPosition.x, CurrentTargetPosition.y, CurrentTargetPosition.z);
+                    transform.position = Vector3.SmoothDamp(transform.position, target.transform.position + CamTargetDifference, ref Velo, FollowSmoothness);
                     RunOnce = true;
                 }
             }

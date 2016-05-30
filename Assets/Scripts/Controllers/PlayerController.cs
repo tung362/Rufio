@@ -12,10 +12,21 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public int TeleportID = 0; //The id of the animation state thats about to teleport
     private GameObject StrafeTarget;
-    private Vector3 TeleportDestination = new Vector3(0, 0, 0);
-    private Vector3 TeleportMovement = new Vector3(0, 0, 0);
+    private Vector3 TeleportDestination = Vector3.zero;
+    private Vector3 TeleportMovement = Vector3.zero;
+    private float ClosestTeleportDistance = int.MaxValue;
+    private GameObject CollidedWall;
     private bool TeleportDestinationReached = true;
     public GameObject Camera;
+
+    [Header("Animation Settings")]
+    public float DashDistance = 5;
+    public float DashSpeed = 80;
+    public float StrafeAttackDistance = 3;
+    public float NormalAttackDistance = 1;
+    public float RunAttackDistance = 2;
+    public float AttackSpeed = 25;
+
     private Rigidbody TheRigidbody;
     private Animator TheAnimator;
 
@@ -30,11 +41,11 @@ public class PlayerController : MonoBehaviour
 
     public void Control()
     {
-        Vector3 rotationMovement = new Vector3(0, 0, 0);
-        Vector3 movement = new Vector3(0, 0, 0);
+        Vector3 rotationMovement = Vector3.zero;
+        Vector3 movement = Vector3.zero;
 
         //Find Closest Strafe Target
-        if(TheAnimator.GetBool("IsStrafe") == true)
+        if(TheAnimator.GetBool("IsStrafe") == true && TheAnimator.GetBool("Fall") == false && TheAnimator.GetLayerWeight(TheAnimator.GetLayerIndex("Fall")) <= 0)
         {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             if (enemies[0] == null) { }
@@ -56,10 +67,8 @@ public class PlayerController : MonoBehaviour
             if (StrafeTarget != null)
             {
                 transform.LookAt(new Vector3(StrafeTarget.transform.position.x, transform.position.y, StrafeTarget.transform.position.z));
-                
             }
         }
-
 
         //Movement
         if (PM.UP == true)
@@ -92,24 +101,41 @@ public class PlayerController : MonoBehaviour
 
 
         //Apply rotation
-        if(TheAnimator.GetBool("IsStrafe") == false && (PM.UP || PM.DOWN || PM.LEFT || PM.RIGHT) && TheAnimator.GetInteger("AttackID") == 0)
+        if (TheAnimator.GetBool("IsStrafe") == false && (PM.UP || PM.DOWN || PM.LEFT || PM.RIGHT) && TheAnimator.GetInteger("AttackID") == 0)
         {
+            Quaternion previousRotation = transform.rotation;
+
             float rotationAngle = Vector3.Angle(new Vector3(0, 1, 0), rotationMovement);
             Vector3 cross = Vector3.Cross(new Vector3(0, 1, 0), rotationMovement);
             if (-cross.z < 0) rotationAngle = -rotationAngle;
             if (rotationMovement == Vector3.zero) rotationAngle = 0;
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, Camera.transform.rotation.eulerAngles.y + rotationAngle, transform.rotation.eulerAngles.z);
+
+            //Prevent Rotation on hurt
+            if (TheAnimator.GetInteger("HurtID") > 0) transform.rotation = previousRotation;
+
+            //Prevent Rotation on landing of a fall
+            if (TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).IsName("PlayerLand") == true)
+            {
+                if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).normalizedTime < 1) transform.rotation = previousRotation;
+            }
         }
+
 
         //Is it currently teleporting?
         if(TeleportDestinationReached == false)
         {
             TheRigidbody.velocity = TeleportMovement;
-            if (Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), TeleportDestination) <= 4)
+
+            if (ClosestTeleportDistance > Vector3.Distance(transform.position, TeleportDestination)) ClosestTeleportDistance = Vector3.Distance(transform.position, TeleportDestination);
+            else
             {
                 TeleportDestinationReached = true;
-                TheRigidbody.velocity = new Vector3(0, 0, 0);
-                gameObject.layer = LayerMask.NameToLayer("Player"); //Ghost
+                if(CollidedWall != null) transform.position = TeleportDestination;
+                TheRigidbody.velocity = Vector3.zero;
+                gameObject.layer = LayerMask.NameToLayer("Player"); //Solid
+                CollidedWall = null;
+                ClosestTeleportDistance = int.MaxValue;
             }
         }
         else
@@ -118,26 +144,64 @@ public class PlayerController : MonoBehaviour
             if (TheAnimator.GetBool("IsIdle") == false && TheAnimator.GetBool("IsStrafe") == false && TheAnimator.GetInteger("AttackID") == 0) TheRigidbody.velocity = new Vector3(movement.x * Speed, TheRigidbody.velocity.y, movement.z * Speed);
             else if (TheAnimator.GetBool("IsStrafe") == true && TheAnimator.GetInteger("AttackID") == 0) TheRigidbody.velocity = new Vector3(movement.x * StrafeSpeed, TheRigidbody.velocity.y, movement.z * StrafeSpeed);
             else TheRigidbody.velocity = new Vector3(TheRigidbody.velocity.x, TheRigidbody.velocity.y, TheRigidbody.velocity.z);
+
+            if(TheAnimator.GetInteger("HurtID") > 0) TheRigidbody.velocity = new Vector3(0, 0, 0);
+
+            //Prevent movement on landing of a fall
+            if (TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).IsName("PlayerLand") == true)
+            {
+                if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).normalizedTime < 1) TheRigidbody.velocity = new Vector3(0, 0, 0);
+            }
         }
 
         //Teleport
-        if (CanTeleport == true)
+        if (CanTeleport == true && TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0)
         {
             TeleportDestinationReached = false;
-            //To do: limit to a distance and if reached change the velocity to 0
+            //Dash
             if (TeleportID == 1)
             {
-                TeleportDestination = new Vector3(transform.position.x + (transform.forward.x * 9), 0, transform.position.z + (transform.forward.z * 9));
-                TeleportMovement = new Vector3(transform.forward.x, 0, transform.forward.z) * 80;
+                LineCastCollisionCheck(transform.position, transform.forward, DashDistance + 1);
+                if(CollidedWall == null) TeleportDestination = transform.position + transform.forward * DashDistance;
+                TeleportMovement = new Vector3(transform.forward.x, 0, transform.forward.z) * DashSpeed;
                 gameObject.layer = LayerMask.NameToLayer("DodgeGhost"); //Ghost
             }
+            //Attack
             else if (TeleportID >= 2)
             {
-                TeleportDestination = new Vector3(transform.position.x + (transform.forward.x * 7), 0, transform.position.z + (transform.forward.z * 7));
-                TeleportMovement = new Vector3(transform.forward.x, 0, transform.forward.z) * 30;
-                //TheRigidbody.velocity = new Vector3(transform.forward.x, 0, transform.forward.z) * 30;
+                //Strafe and normal attack has different lunge distance to prevent abuse of spamming attack as a second dash
+                if(TheAnimator.GetBool("IsStrafe") == false)
+                {
+                    //Normal
+                    if(TheAnimator.GetBool("IsIdle") == true)
+                    {
+                        LineCastCollisionCheck(transform.position, transform.forward, NormalAttackDistance + 1);
+                        if (CollidedWall == null) TeleportDestination = transform.position + transform.forward * NormalAttackDistance;
+                    }
+                    else
+                    {
+                        LineCastCollisionCheck(transform.position, transform.forward, RunAttackDistance);
+                        if (CollidedWall == null) TeleportDestination = transform.position + transform.forward * RunAttackDistance;
+                    }
+                }
+                else
+                {
+                    //Strafe
+                    LineCastCollisionCheck(transform.position, transform.forward, StrafeAttackDistance + 1);
+                    if (CollidedWall == null) TeleportDestination = transform.position + transform.forward * StrafeAttackDistance;
+                }
+                TeleportMovement = new Vector3(transform.forward.x, 0, transform.forward.z) * AttackSpeed;
             }
-             TeleportID = 0;
+
+            //Prevent movement on hurt
+            if (TheAnimator.GetInteger("HurtID") > 0) TeleportMovement = new Vector3(0, 0, 0);
+
+            //Prevent movement on landing of a fall
+            if (TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).IsName("PlayerLand") == true)
+            {
+                if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).normalizedTime < 1) TeleportMovement = new Vector3(0, 0, 0);
+            }
+            TeleportID = 0;
             CanTeleport = false;
         }
     }
@@ -149,5 +213,26 @@ public class PlayerController : MonoBehaviour
         if (b > a)
             return b - a - Mathf.PI * 2.0f;
         return b - a + Mathf.PI * 2.0f;
+    }
+
+    //Used for checking if player is going to run into any walls (Prevents player from clipping through)
+    void LineCastCollisionCheck(Vector3 Start, Vector3 End, float Length)
+    {
+        RaycastHit[] hits = Physics.RaycastAll(Start, End, Length);
+
+        float closestDistance = int.MaxValue;
+        for (int i = 0; i < hits.Length; ++i)
+        {
+            if (hits[i].collider.gameObject.layer == LayerMask.NameToLayer("Wall"))
+            {
+                float distance = Vector3.Distance(transform.position, hits[i].point);
+                if (closestDistance > distance)
+                {
+                    closestDistance = distance;
+                    TeleportDestination = new Vector3(hits[i].point.x, hits[i].point.y, hits[i].point.z);
+                    CollidedWall = hits[i].collider.gameObject;
+                }
+            }
+        }
     }
 }

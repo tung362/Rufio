@@ -9,6 +9,13 @@ public class PlayerAnimation : MonoBehaviour
     private bool SetRandomIdle = true;
     private float AttackResetTimer = 0;
     public float AttackResetDelay = 1f;
+    private float DistanceToGround = int.MaxValue;
+    private Vector3 GroundPosition;
+
+    [Header("Animation Settings")]
+    public bool CanAttack = true;
+    private float CanAttackTimer = 0;
+    public float CanAttackDelay = 1;
 
     private PlayerManager PM;
 
@@ -20,20 +27,36 @@ public class PlayerAnimation : MonoBehaviour
 
     public void Attack()
     {
-        //Attack (WIP)
-        if (TheAnimator.GetInteger("CurrentAttackChain") >= 2)
+        //Attack cool down
+        if(CanAttack == false)
         {
-            AttackResetTimer += Time.fixedDeltaTime;
-            if (AttackResetTimer >= AttackResetDelay)
+            CanAttackTimer += Time.deltaTime;
+            if(CanAttackTimer >= CanAttackDelay)
             {
-                TheAnimator.SetInteger("CurrentAttackChain", 2);
-                AttackResetTimer = 0;
+                CanAttack = true;
+                CanAttackTimer = 0;
             }
-
-            if (PM.ATTACK == true)
+        }
+        else
+        {
+            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0)
             {
-                AttackResetTimer = 0;
-                TheAnimator.SetInteger("AttackID", TheAnimator.GetInteger("CurrentAttackChain"));
+                //Attack
+                if (TheAnimator.GetInteger("CurrentAttackChain") >= 2)
+                {
+                    AttackResetTimer += Time.deltaTime;
+                    if (AttackResetTimer >= AttackResetDelay)
+                    {
+                        TheAnimator.SetInteger("CurrentAttackChain", 2);
+                        AttackResetTimer = 0;
+                    }
+
+                    if (PM.ATTACK == true)
+                    {
+                        AttackResetTimer = 0;
+                        TheAnimator.SetInteger("AttackID", TheAnimator.GetInteger("CurrentAttackChain"));
+                    }
+                }
             }
         }
     }
@@ -41,6 +64,7 @@ public class PlayerAnimation : MonoBehaviour
     public void Animate()
     {
         bool isIdle = true;
+        bool isBlock = false;
         float forwardMovement = 0;
         float sideMovement = 0;
 
@@ -60,6 +84,7 @@ public class PlayerAnimation : MonoBehaviour
             }
             else SetRandomIdle = true;
         }
+
 
         //Movement
         if (PM.UP == true)
@@ -87,7 +112,19 @@ public class PlayerAnimation : MonoBehaviour
             sideMovement = Vector3.Dot(transform.right, new Vector3(-1, 0, 0));
         }
 
-        if (PM.DODGE == true) TheAnimator.SetInteger("AttackID", 1);
+        if (PM.DODGE == true)
+        {
+            if(TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0) TheAnimator.SetInteger("AttackID", 1);
+        }
+
+        if (PM.BLOCK == true)
+        {
+            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0) isBlock = true;
+            //if(Input.GetKeyDown("e")) TheAnimator.SetBool("BlockHit", true);
+        }
+
+        //TestKey
+        if(Input.GetKeyDown("e")) TheAnimator.SetInteger("HurtID", 2);
 
 
         //Strafe
@@ -102,5 +139,38 @@ public class PlayerAnimation : MonoBehaviour
         TheAnimator.SetFloat("MoveForward", forwardMovement);
         TheAnimator.SetFloat("MoveSide", sideMovement);
         TheAnimator.SetBool("IsIdle", isIdle);
+        TheAnimator.SetBool("IsBlock", isBlock);
+    }
+
+    public void Fall()
+    {
+        //Fall
+        RayCastGroundCheck(transform.position, -transform.up, 100);
+        if (DistanceToGround <= 1.5f)
+        {
+            TheAnimator.SetBool("Fall", false);
+            transform.position = new Vector3(transform.position.x, transform.position.y + GroundPosition.y, transform.position.z);
+        }
+        else TheAnimator.SetBool("Fall", true);
+    }
+
+    void RayCastGroundCheck(Vector3 Start, Vector3 End, float Length)
+    {
+        RaycastHit[] hits = Physics.RaycastAll(Start, End, Length);
+
+        float closestDistance = int.MaxValue;
+        for (int i = 0; i < hits.Length; ++i)
+        {
+            if (hits[i].collider.gameObject.layer != LayerMask.NameToLayer("Player") || hits[i].collider.gameObject.layer != LayerMask.NameToLayer("Enemy"))
+            {
+                float distance = Vector3.Distance(transform.position, hits[i].point);
+                if (closestDistance > distance)
+                {
+                    closestDistance = distance;
+                    DistanceToGround = closestDistance;
+                    GroundPosition = hits[i].point;
+                }
+            }
+        }
     }
 }
