@@ -17,6 +17,11 @@ public class PlayerAnimation : MonoBehaviour
     private float CanAttackTimer = 0;
     public float CanAttackDelay = 1;
 
+    [Header("Damage Settings")]
+    public GameObject PlayerHitBox;
+    public GameObject PlayerBlockBox;
+    public float SwordDamage = 50;
+
     private PlayerManager PM;
 
     void Start()
@@ -39,7 +44,7 @@ public class PlayerAnimation : MonoBehaviour
         }
         else
         {
-            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0)
+            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetBool("IsGun") == false && TheAnimator.GetBool("ChangingWeapons") == false && TheAnimator.GetInteger("HurtID") == 0)
             {
                 //Attack
                 if (TheAnimator.GetInteger("CurrentAttackChain") >= 2)
@@ -53,11 +58,40 @@ public class PlayerAnimation : MonoBehaviour
 
                     if (PM.ATTACK == true)
                     {
+                        PlayerHitBox.GetComponent<HitBoxDamage>().DamageValue = SwordDamage;
+                        PlayerHitBox.SetActive(true);
                         AttackResetTimer = 0;
                         TheAnimator.SetInteger("AttackID", TheAnimator.GetInteger("CurrentAttackChain"));
                     }
+                    
+                    if(TheAnimator.GetInteger("AttackID") == 0) PlayerHitBox.SetActive(false);
                 }
             }
+        }
+
+        //Gun Aim and shoot
+        if (TheAnimator.GetBool("IsGun") == true)
+        {
+            float forwardShoot = 0;
+            float sideShoot = 0;
+
+            if (PM.ATTACK == true)
+            {
+                Vector3 pixelMousePosition = Input.mousePosition;
+                Plane plane = new Plane(Vector3.up, 0);
+                float dist;
+                Ray ray = Camera.main.ScreenPointToRay(pixelMousePosition);
+                if (plane.Raycast(ray, out dist))
+                {
+                    Vector3 worldMousePosition = ray.GetPoint(dist);
+                    Vector3 difference = transform.position - new Vector3(worldMousePosition.x, transform.position.y, worldMousePosition.z);
+                    forwardShoot = -Vector3.Dot(new Vector3(difference.x, 0, difference.z).normalized, transform.forward);
+                    sideShoot = -Vector3.Dot(new Vector3(difference.x, 0, difference.z).normalized, transform.right);
+                }
+            }
+
+            TheAnimator.SetFloat("ShootForward", forwardShoot);
+            TheAnimator.SetFloat("ShootSide", sideShoot);
         }
     }
 
@@ -112,20 +146,51 @@ public class PlayerAnimation : MonoBehaviour
             sideMovement = Vector3.Dot(transform.right, new Vector3(-1, 0, 0));
         }
 
+        if (PM.WEAPON1 == true)
+        {
+            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0)
+            {
+                TheAnimator.SetInteger("WeaponID", 1);
+                TheAnimator.SetBool("ChangingWeapons", true);
+            }
+        }
+
+        if (PM.WEAPON2 == true)
+        {
+            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0)
+            {
+                TheAnimator.SetInteger("WeaponID", 2);
+                TheAnimator.SetBool("ChangingWeapons", true);
+            }
+        }
+
+        if (PM.WEAPON3 == true)
+        {
+            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0)
+            {
+                TheAnimator.SetInteger("WeaponID", 3);
+                TheAnimator.SetBool("ChangingWeapons", true);
+            }
+        }
+
         if (PM.DODGE == true)
         {
-            if(TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0) TheAnimator.SetInteger("AttackID", 1);
+            if(TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0 && TheAnimator.GetBool("IsGun") == false && TheAnimator.GetBool("ChangingWeapons") == false) TheAnimator.SetInteger("AttackID", 1);
         }
 
         if (PM.BLOCK == true)
         {
-            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0) isBlock = true;
-            //if(Input.GetKeyDown("e")) TheAnimator.SetBool("BlockHit", true);
+            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0 &&
+                TheAnimator.GetBool("IsGun") == false && TheAnimator.GetBool("ChangingWeapons") == false)
+            {
+                isBlock = true;
+                PlayerBlockBox.SetActive(true);
+            }
         }
+        else PlayerBlockBox.SetActive(false);
 
         //TestKey
-        if(Input.GetKeyDown("e")) TheAnimator.SetInteger("HurtID", 2);
-
+        if (Input.GetKeyDown("e")) TheAnimator.SetInteger("HurtID", 4);
 
         //Strafe
         if (PM.LOCKON == true)
@@ -172,5 +237,14 @@ public class PlayerAnimation : MonoBehaviour
                 }
             }
         }
+    }
+
+    GameObject FindChildByName(string Name)
+    {
+        foreach(Transform child in transform)
+        {
+            if (child.name == Name) return child.gameObject;
+        }
+        return null;
     }
 }

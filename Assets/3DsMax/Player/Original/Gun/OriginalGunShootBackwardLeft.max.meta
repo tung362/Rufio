@@ -1,0 +1,165 @@
+fileFormatVersion: 2
+guid: 970848dda4ba7374695505d54f466e88
+timeCreated: 1464634219
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Body_O
+    100002: Gun_Handle
+    100004: Gun_Handle 1
+    100006: Gun_Top
+    100008: Gun_Top 1
+    100010: Gun_Top_Barrel
+    100012: Gun_Top_Barrel 1
+    100014: Gun_Top_Inner
+    100016: Gun_Top_Inner 1
+    100018: Head
+    100020: Head_Top
+    100022: Hip
+    100024: Left_Bottom_Arm
+    100026: Left_Bottom_Leg
+    100028: Left_Foot
+    100030: Left_Palm
+    100032: Left_Shoulder
+    100034: Left_Toe
+    100036: Left_Upper_Arm
+    100038: Left_Upper_Leg
+    100040: Neck1
+    100042: Neck2
+    100044: //RootNode
+    100046: Right_Bottom_Arm
+    100048: Right_Bottom_Leg
+    100050: Right_Foot
+    100052: Right_Palm
+    100054: Right_Shoulder
+    100056: Right_Toe
+    100058: Right_Upper_Arm
+    100060: Right_Upper_Leg
+    100062: Spine1
+    100064: Spine2
+    400000: Body_O
+    400002: Gun_Handle
+    400004: Gun_Handle 1
+    400006: Gun_Top
+    400008: Gun_Top 1
+    400010: Gun_Top_Barrel
+    400012: Gun_Top_Barrel 1
+    400014: Gun_Top_Inner
+    400016: Gun_Top_Inner 1
+    400018: Head
+    400020: Head_Top
+    400022: Hip
+    400024: Left_Bottom_Arm
+    400026: Left_Bottom_Leg
+    400028: Left_Foot
+    400030: Left_Palm
+    400032: Left_Shoulder
+    400034: Left_Toe
+    400036: Left_Upper_Arm
+    400038: Left_Upper_Leg
+    400040: Neck1
+    400042: Neck2
+    400044: //RootNode
+    400046: Right_Bottom_Arm
+    400048: Right_Bottom_Leg
+    400050: Right_Foot
+    400052: Right_Palm
+    400054: Right_Shoulder
+    400056: Right_Toe
+    400058: Right_Upper_Arm
+    400060: Right_Upper_Leg
+    400062: Spine1
+    400064: Spine2
+    2300000: Gun_Handle
+    2300002: Gun_Handle 1
+    2300004: Gun_Top
+    2300006: Gun_Top 1
+    2300008: Gun_Top_Barrel
+    2300010: Gun_Top_Barrel 1
+    2300012: Gun_Top_Inner
+    2300014: Gun_Top_Inner 1
+    3300000: Gun_Handle
+    3300002: Gun_Handle 1
+    3300004: Gun_Top
+    3300006: Gun_Top 1
+    3300008: Gun_Top_Barrel
+    3300010: Gun_Top_Barrel 1
+    3300012: Gun_Top_Inner
+    3300014: Gun_Top_Inner 1
+    4300000: Body_O
+    4300002: Gun_Handle
+    4300004: Gun_Top
+    4300006: Gun_Top_Inner
+    4300008: Gun_Top_Barrel
+    4300010: Gun_Handle
+    4300012: Gun_Top
+    4300014: Gun_Top_Inner
+    4300016: Gun_Top_Barrel
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: Body_O
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

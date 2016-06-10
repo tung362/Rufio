@@ -45,6 +45,30 @@ public class SetOnEndOfAnimation : StateMachineBehaviour
     public bool ModifyBlockHit = false;
     public bool BlockHitValue = false;
 
+    [Space(10)]
+    public bool ModifyChangingWeapons = false;
+    public bool ChangingWeaponsValue = false;
+
+    [Space(10)]
+    public bool ModifyWeaponID = false;
+    public int WeaponIDValue = 1;
+
+    [Space(10)]
+    public bool ModifyIsSword = false;
+    public bool IsSwordValue = false;
+
+    [Space(10)]
+    public bool ModifyIsGun = false;
+    public bool IsGunValue = false;
+
+    [Space(10)]
+    public bool ModifyShootForward = false;
+    public float ShootForwardValue = 0;
+
+    [Space(10)]
+    public bool ModifyShootSide = false;
+    public float ShootSideValue = 0;
+
     //[Space(10)]
     [Header("Used by player controller")]
     public bool EnableCanTeleport = false;
@@ -80,6 +104,12 @@ public class SetOnEndOfAnimation : StateMachineBehaviour
             if (ModifyHurt == true) animator.SetInteger("HurtID", HurtValue);
             if (ModifyIsBlock == true) animator.SetBool("IsBlock", IsBlockValue);
             if (ModifyBlockHit == true) animator.SetBool("BlockHit", BlockHitValue);
+            if (ModifyChangingWeapons == true) animator.SetBool("ChangingWeapons", ChangingWeaponsValue);
+            if (ModifyWeaponID == true) animator.SetInteger("WeaponID", WeaponIDValue);
+            if (ModifyIsSword == true) animator.SetBool("IsSword", IsSwordValue);
+            if (ModifyIsGun == true) animator.SetBool("IsGun", IsGunValue);
+            if (ModifyShootForward == true) animator.SetFloat("ShootForward", ShootForwardValue);
+            if (ModifyShootSide == true) animator.SetFloat("ShootSide", ShootSideValue);
 
             RunOnce = false;
         }

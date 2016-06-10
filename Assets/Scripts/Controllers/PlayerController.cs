@@ -45,7 +45,8 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = Vector3.zero;
 
         //Find Closest Strafe Target
-        if(TheAnimator.GetBool("IsStrafe") == true && TheAnimator.GetBool("Fall") == false && TheAnimator.GetLayerWeight(TheAnimator.GetLayerIndex("Fall")) <= 0)
+        if(TheAnimator.GetBool("IsStrafe") == true && TheAnimator.GetBool("Fall") == false && TheAnimator.GetLayerWeight(TheAnimator.GetLayerIndex("Fall")) <= 0 &&
+             TheAnimator.GetBool("IsGun") == false && TheAnimator.GetBool("ChangingWeapons") == false)
         {
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
             if (enemies[0] == null) { }
@@ -195,6 +196,9 @@ public class PlayerController : MonoBehaviour
 
             //Prevent movement on hurt
             if (TheAnimator.GetInteger("HurtID") > 0) TeleportMovement = new Vector3(0, 0, 0);
+
+            //Prevent movement 
+            if(TheAnimator.GetBool("IsGun") == true || TheAnimator.GetBool("ChangingWeapons") == true) TeleportMovement = new Vector3(0, 0, 0);
 
             //Prevent movement on landing of a fall
             if (TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).IsName("PlayerLand") == true)
