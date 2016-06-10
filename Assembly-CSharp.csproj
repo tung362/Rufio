@@ -55,6 +55,8 @@
      <Compile Include="Assets\Scripts\Environment\LevelTracker.cs" />
      <Compile Include="Assets\Scripts\Environment\PlayerID.cs" />
      <Compile Include="Assets\SetOnEndOfAnimation.cs" />
+     <Compile Include="Assets\TransitionToLayer.cs" />
+     <Compile Include="Assets\TransitionToLayerOnEnd.cs" />
      <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Standard Assets\Effects\ImageEffects\Shaders\NoiseEffectShaderRGB.shader" />
