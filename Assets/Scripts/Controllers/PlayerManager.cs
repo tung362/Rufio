@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//Stitches the controller and animation together and also handles the inputs
 public class PlayerManager : MonoBehaviour
 {
     private PlayerController PC;

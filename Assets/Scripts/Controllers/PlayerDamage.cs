@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//Handles objects that collides with the player and take damage accordingly
 public class PlayerDamage : MonoBehaviour
 {
     private Animator TheAnimator;
@@ -29,12 +30,11 @@ public class PlayerDamage : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         //Melee
-        if (other.gameObject.layer == LayerMask.NameToLayer("EnemyHitBox") && other.gameObject.name == "EnemyHitBox")
+        if (other.gameObject.layer == LayerMask.NameToLayer("EnemyHitBox"))
         {
             //Hurt Animation
-            //if(TheAnimator.GetInteger("HurtID") == 3 || TheAnimator.GetInteger("HurtID") == 4) TheAnimator.SetInteger("HurtID", 4);
-            //else TheAnimator.SetInteger("HurtID", other.gameObject.GetComponent<HitBoxDamage>().DamageID);
-            TheAnimator.SetInteger("HurtID", other.gameObject.GetComponent<HitBoxDamage>().DamageID);
+            if (TheAnimator.GetInteger("HurtID") == 3 || TheAnimator.GetInteger("HurtID") == 4) TheAnimator.SetInteger("HurtID", 4);
+            else TheAnimator.SetInteger("HurtID", other.gameObject.GetComponent<HitBoxDamage>().DamageID);
             //Damage
             Global.CurrentHealth -= other.gameObject.GetComponent<HitBoxDamage>().DamageValue;
         }

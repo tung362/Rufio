@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//Handles the animation side of the player
 public class PlayerAnimation : MonoBehaviour
 {
     //Animation

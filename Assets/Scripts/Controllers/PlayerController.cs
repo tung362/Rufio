@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//Handles the physics side of the player
 public class PlayerController : MonoBehaviour
 {
     //Control
