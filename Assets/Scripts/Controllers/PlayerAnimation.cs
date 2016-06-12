@@ -211,18 +211,24 @@ public class PlayerAnimation : MonoBehaviour
     public void Fall()
     {
         //Fall
-        RayCastGroundCheck(transform.position, -transform.up, 100);
-        if (DistanceToGround <= 1.5f)
+        if(gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            TheAnimator.SetBool("Fall", false);
-            transform.position = new Vector3(transform.position.x, transform.position.y + GroundPosition.y, transform.position.z);
+            RayCastGroundCheck(transform.position, -transform.up, 100);
+            if (DistanceToGround <= 1.5f)
+            {
+                TheAnimator.SetBool("Fall", false);
+                transform.position = new Vector3(transform.position.x, GroundPosition.y + DistanceToGround, transform.position.z);
+            }
+            else TheAnimator.SetBool("Fall", true);
         }
-        else TheAnimator.SetBool("Fall", true);
     }
 
     void RayCastGroundCheck(Vector3 Start, Vector3 End, float Length)
     {
         RaycastHit[] hits = Physics.RaycastAll(Start, End, Length);
+
+        //If no collisions then just assume falling
+        if (hits.Length == 0) DistanceToGround = 100;
 
         float closestDistance = int.MaxValue;
         for (int i = 0; i < hits.Length; ++i)

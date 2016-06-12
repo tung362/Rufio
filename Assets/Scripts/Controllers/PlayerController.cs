@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     private GameObject CollidedWall;
     private bool TeleportDestinationReached = true;
     public GameObject Camera;
+    [HideInInspector]
+    public Vector3 ManualRotation = Vector3.zero; //Used by PlayerDamage script to rotate the player towards where player got hit
 
     [Header("Animation Settings")]
     public float DashDistance = 5;
@@ -113,19 +115,18 @@ public class PlayerController : MonoBehaviour
             if (rotationMovement == Vector3.zero) rotationAngle = 0;
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, Camera.transform.rotation.eulerAngles.y + rotationAngle, transform.rotation.eulerAngles.z);
 
-            //Prevent Rotation on hurt
-            if (TheAnimator.GetInteger("HurtID") > 0) transform.rotation = previousRotation;
-
             //Prevent Rotation on landing of a fall
             if (TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).IsName("PlayerLand") == true)
             {
                 if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).normalizedTime < 1) transform.rotation = previousRotation;
             }
         }
+        //Prevent Rotation on hurt
+        if (TheAnimator.GetInteger("HurtID") > 0) transform.LookAt(new Vector3(ManualRotation.x, transform.position.y, ManualRotation.z));
 
 
         //Is it currently teleporting?
-        if(TeleportDestinationReached == false)
+        if (TeleportDestinationReached == false)
         {
             TheRigidbody.velocity = TeleportMovement;
 
@@ -145,14 +146,14 @@ public class PlayerController : MonoBehaviour
             //Apply Movement
             if (TheAnimator.GetBool("IsIdle") == false && TheAnimator.GetBool("IsStrafe") == false && TheAnimator.GetInteger("AttackID") == 0) TheRigidbody.velocity = new Vector3(movement.x * Speed, TheRigidbody.velocity.y, movement.z * Speed);
             else if (TheAnimator.GetBool("IsStrafe") == true && TheAnimator.GetInteger("AttackID") == 0) TheRigidbody.velocity = new Vector3(movement.x * StrafeSpeed, TheRigidbody.velocity.y, movement.z * StrafeSpeed);
-            else TheRigidbody.velocity = new Vector3(TheRigidbody.velocity.x, TheRigidbody.velocity.y, TheRigidbody.velocity.z);
+            else TheRigidbody.velocity = new Vector3(0, TheRigidbody.velocity.y, 0);
 
-            if(TheAnimator.GetInteger("HurtID") > 0) TheRigidbody.velocity = new Vector3(0, 0, 0);
+            if(TheAnimator.GetInteger("HurtID") > 0) TheRigidbody.velocity = Vector3.zero;
 
             //Prevent movement on landing of a fall
             if (TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).IsName("PlayerLand") == true)
             {
-                if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).normalizedTime < 1) TheRigidbody.velocity = new Vector3(0, 0, 0);
+                if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetCurrentAnimatorStateInfo(TheAnimator.GetLayerIndex("Fall")).normalizedTime < 1) TheRigidbody.velocity = Vector3.zero;
             }
         }
 
