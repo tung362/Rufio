@@ -1,0 +1,174 @@
+fileFormatVersion: 2
+guid: 7f176f84bb5e0504d9b9a68680422b82
+timeCreated: 1466059430
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Cylinder003
+    100002: Cylinder004
+    100004: Cylinder005
+    100006: Cylinder006
+    100008: Cylinder007
+    100010: Cylinder008
+    100012: Cylinder009
+    100014: Cylinder010
+    100016: MushroomHead
+    100018: MushroomHead001
+    100020: MushroomHead002
+    100022: MushroomHead003
+    100024: MushroomHead004
+    100026: MushroomHead005
+    100028: MushroomHead006
+    100030: MushroomHead007
+    100032: //RootNode
+    100034: Spot001
+    100036: Spot010
+    100038: Spot017
+    100040: Spot031
+    400000: Cylinder003
+    400002: Cylinder004
+    400004: Cylinder005
+    400006: Cylinder006
+    400008: Cylinder007
+    400010: Cylinder008
+    400012: Cylinder009
+    400014: Cylinder010
+    400016: MushroomHead
+    400018: MushroomHead001
+    400020: MushroomHead002
+    400022: MushroomHead003
+    400024: MushroomHead004
+    400026: MushroomHead005
+    400028: MushroomHead006
+    400030: MushroomHead007
+    400032: //RootNode
+    400034: Spot001
+    400036: Spot010
+    400038: Spot017
+    400040: Spot031
+    2300000: Cylinder003
+    2300002: Cylinder004
+    2300004: Cylinder005
+    2300006: Cylinder006
+    2300008: Cylinder007
+    2300010: Cylinder008
+    2300012: Cylinder009
+    2300014: Cylinder010
+    2300016: MushroomHead
+    2300018: MushroomHead001
+    2300020: MushroomHead002
+    2300022: MushroomHead003
+    2300024: MushroomHead004
+    2300026: MushroomHead005
+    2300028: MushroomHead006
+    2300030: MushroomHead007
+    2300032: Spot001
+    2300034: Spot010
+    2300036: Spot017
+    2300038: Spot031
+    3300000: Cylinder003
+    3300002: Cylinder004
+    3300004: Cylinder005
+    3300006: Cylinder006
+    3300008: Cylinder007
+    3300010: Cylinder008
+    3300012: Cylinder009
+    3300014: Cylinder010
+    3300016: MushroomHead
+    3300018: MushroomHead001
+    3300020: MushroomHead002
+    3300022: MushroomHead003
+    3300024: MushroomHead004
+    3300026: MushroomHead005
+    3300028: MushroomHead006
+    3300030: MushroomHead007
+    3300032: Spot001
+    3300034: Spot010
+    3300036: Spot017
+    3300038: Spot031
+    4300000: MushroomHead
+    4300002: MushroomHead001
+    4300004: MushroomHead002
+    4300006: MushroomHead003
+    4300008: MushroomHead004
+    4300010: MushroomHead005
+    4300012: MushroomHead006
+    4300014: MushroomHead007
+    4300016: Cylinder003
+    4300018: Cylinder004
+    4300020: Cylinder005
+    4300022: Cylinder006
+    4300024: Cylinder007
+    4300026: Cylinder008
+    4300028: Cylinder009
+    4300030: Cylinder010
+    4300032: Spot001
+    4300034: Spot010
+    4300036: Spot017
+    4300038: Spot031
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 3
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
