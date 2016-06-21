@@ -8,6 +8,10 @@ using System.Collections;
 
 //Welcome to comment city. Usefull Population: 15,
 
+    /// <summary>
+    /// This class is meant to be inherited from for other more speciallized AI types. 
+    /// It is designed to contain and handle basic interaction, but nothing too advanced.
+    /// </summary>
 public class BasicBrain : MonoBehaviour
 {
     /* INSPECTOR STUFF */
@@ -30,23 +34,30 @@ public class BasicBrain : MonoBehaviour
     protected float st_Speed; //What is my current speed?
     protected float st_Damage; //What is my current damage?
     protected int st_EnemiesInSight; //How many enemies can I see?
-    protected Vector3 st_PlayerLocation() { return ro_Player.transform.position; } //One-way access to the player's location
+    protected Vector3 st_PlayerLocation() { return ro_Player.transform.position; } //One-way access to the player's location]
+    protected Vector3 st_PlayerRelLoc() { return st_PlayerLocation() - transform.position; }
 
     private Vector3 st_TargetDirection(Vector3 target) { return (target - transform.position).normalized; }
     private int st_EnemyCount; //Keeps track of the amount enemies in the current scene, not for use by AI directly.
     /* RAW OBJECTS */
-    private GameObject ro_Player; //Player data is NOT directly accessable by the AI, it must go thorugh one-way access functions. Yay data protection!!   
     protected Rigidbody ro_Me; //Rigidbody attached to the AI
+
+    private GameObject ro_Player; //Player data is NOT directly accessable by the AI, it must go thorugh one-way access functions. Yay data protection!!   
+
+    /**/
+    private NavMeshAgent nma;
+
 
     /* STATE FUNCTIONS */
     private bool isPlayerInSight()
     {
-        if (Mathf.Abs(Vector3.Angle(transform.forward, st_PlayerLocation())) <= 45.0f) return true;
+        if (Vector3.Angle(st_PlayerRelLoc(), transform.forward) <= 22.5f) return true;
+        Debug.Log(Vector3.Angle(st_PlayerRelLoc(), transform.forward));
         return false;
     }
 
     //This function does alot of work every frame... gotta be a way to optimize when it checks the nitty gritty stuff.
-    void setObservatioinalData()
+    private void setObservatioinalData()
     {
         // I'M BLIIIIIINNNNND!!!
         s_CanSeePlayer = false; s_HasSeenPlayer = false; s_CanSeeEnemy = false;
@@ -63,13 +74,13 @@ public class BasicBrain : MonoBehaviour
                 GameObject[] enemies = GameObject.FindGameObjectsWithTag("Friend");
                 if (enemies != null)
                 {
-                    for (st_EnemyCount = 0; st_EnemyCount < enemies.Length - 1; st_EnemyCount++) ; // <- Don't kill me for this
+                    st_EnemyCount = enemies.Length;
                     for (int a = st_EnemiesInSight; a < st_EnemyCount; a++)
                         if (Mathf.Abs(Vector3.Angle(enemies[a].transform.position, transform.forward)) <= 45.0f)
                         { st_EnemiesInSight++; s_CanSeeEnemy = true; }
                 }
 
-                st_EnemyCount++; //Adds player to enemy count
+                st_EnemyCount++; //Adds player to enemy count (so if said player is an enemy, st_EC will always be at least one.)
                 if (s_CanSeePlayer) { s_CanSeeEnemy = true; st_EnemiesInSight++; } //++ Always accounts for the player, since they will never be in enemies[]. MAGIC!!
                 break;
             case PlayerRelationship.FREIND:
@@ -77,8 +88,7 @@ public class BasicBrain : MonoBehaviour
                 GameObject[] enemies2 = GameObject.FindGameObjectsWithTag("Enemy");
                 if (enemies2 != null)
                 {
-                    for (st_EnemyCount = 0; st_EnemyCount < enemies2.Length - 1; st_EnemyCount++) ;
-
+                    st_EnemyCount = enemies2.Length;
                     for (int a = st_EnemiesInSight; a < st_EnemyCount; a++)
                         if (Vector3.Angle(enemies2[a].transform.position, transform.forward) <= 45.0f)
                         { st_EnemiesInSight++; s_CanSeeEnemy = true; }
@@ -93,11 +103,61 @@ public class BasicBrain : MonoBehaviour
         if (s_CurrentRelationship == PlayerRelationship.ENEMY && s_CanSeePlayer) s_CurrentAttitude = PlayerAttitude.HOSTILE;
         else s_CurrentAttitude = PlayerAttitude.IDLE;
     }
-     
 
+    /* DEBUG FUNCTIONS */
+
+    void debugDrirectionalData()
+    {
+        if (s_CurrentAttitude == PlayerAttitude.HOSTILE && s_CanSeePlayer)
+        {
+            MoveTo(st_PlayerLocation(), st_Speed);
+            Debug.Log("I SEE YOU~! ");
+        }
+        else Face(st_PlayerLocation());
+        Debug.DrawLine(transform.position, transform.position + transform.forward);
+    }
+
+    /* BEHAVIOUR */
+    /// <summary>
+    /// Turn towards a target vector. Awareness is a multiplier for how fast it moves.
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="awareness"></param>
+    protected void Face(Vector3 target, bool lookAtY = false, float awareness = 3.0f)
+    {
+        Vector3 dir = (target - transform.position).normalized;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), awareness * Time.deltaTime);
+    }
+
+    /// <param name="target"></param>
+    /// <param name="speed"></param>
+    protected void MoveTo(Vector3 target, float speed)
+    {
+        target -= transform.position;
+        ro_Me.velocity = new Vector3(target.x, 0, target.z).normalized * speed;
+        //ro_Me.AddForce(st_TargetDirection(target) * speed);
+    }
+
+    /// <summary>
+    /// Basic attack routine. Use for enemies that don't need more intelligent attack system.
+    /// </summary>
+    protected void Attack()
+    {
+
+    }
+
+    /// <summary>
+    /// AI will look for a "lost" object. Tenacity is a multiplier for how long it will look. Used only for an immeadiate area.
+    /// </summary>
+    /// <param name="tenacity"></param>
+    /// <param name="radius"></param>
+    protected void Search(float tenacity, float radius)
+    {
+
+    }
 
     /* UNITY FUNCTIONS */
-	void Start ()
+	 void Start ()
     {
         s_CurrentAttitude = DefaultAttitude;
         s_CurrentRelationship = DefaultRelationship;
@@ -108,7 +168,7 @@ public class BasicBrain : MonoBehaviour
     }
 
 
-    void Update()
+     void Update()
     {
         setObservatioinalData();
         setCurrentAttitude();
@@ -116,12 +176,6 @@ public class BasicBrain : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (s_CurrentAttitude == PlayerAttitude.HOSTILE && s_CanSeePlayer)
-        {
-            ro_Me.AddForce(st_TargetDirection(st_PlayerLocation()) * st_Speed);
-            Debug.Log("I SEE YOU~! " + st_Speed);
-        }
-        Debug.DrawLine(transform.position, transform.position + transform.forward);
-
+        debugDrirectionalData();
     }
 }
