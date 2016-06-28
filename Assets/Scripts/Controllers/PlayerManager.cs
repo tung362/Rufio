@@ -39,15 +39,19 @@ public class PlayerManager : MonoBehaviour
     [HideInInspector]
     public bool DEBUG;
 
+    //Access to global vars
+    private GlobalVars Global;
+
     void Start()
     {
+        Global = FindObjectOfType<GlobalVars>();
         PC = GetComponent<PlayerController>();
         PA = GetComponent<PlayerAnimation>();
     }
 
     void Update()
     {
-        Inputs();
+        if(Global.Pause == false) Inputs();
         PA.Attack();
     }
 

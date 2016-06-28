@@ -27,6 +27,8 @@ public class GlobalVars : MonoBehaviour
     public float PreviousHealth = 100;
     public float MaxEnergy = 100;
     public float CurrentEnergy = 100;
+    public float MaxSpecial = 100;
+    public float CurrentSpecial = 100;
 
     //Timers
     public bool StartHealthRegen = false; //When taking damage, set to false
@@ -39,6 +41,7 @@ public class GlobalVars : MonoBehaviour
     public float EnergyRegenDelay = 0.2f;
 
     //Misc
+    public bool Pause = false;
     public bool Save = false;
     public bool Load = false;
 
@@ -61,8 +64,13 @@ public class GlobalVars : MonoBehaviour
 
     void Update()
     {
+        PauseGame();
+        SaveGame();
+        LoadGame();
+
+
         //Health Regen
-        if(CurrentHealth < MaxHealth)
+        if (CurrentHealth < MaxHealth)
         {
             if(CurrentHealth < PreviousHealth)
             {
@@ -116,6 +124,10 @@ public class GlobalVars : MonoBehaviour
         if (CurrentEnergy > MaxEnergy) CurrentEnergy = MaxEnergy; //Limit
         if (CurrentEnergy < 0) CurrentEnergy = 0; //Limit
 
+        //Special Regen
+        if (CurrentSpecial > MaxSpecial) CurrentSpecial = MaxSpecial; //Limit
+        if (CurrentSpecial < 0) CurrentSpecial = 0; //Limit
+
         //Debug Toggle
         if (Input.GetButtonDown("Debug"))
         {
@@ -123,11 +135,13 @@ public class GlobalVars : MonoBehaviour
             else DebugMode = true;
         }
 
-        //Health
+        //Test
         if (Input.GetKeyDown(KeyCode.H)) CurrentHealth += 5;
         if (Input.GetKeyDown(KeyCode.G)) CurrentHealth -= 5;
         if (Input.GetKeyDown(KeyCode.B)) CurrentEnergy += 5;
         if (Input.GetKeyDown(KeyCode.V)) CurrentEnergy -= 5;
+        if (Input.GetKeyDown(KeyCode.J)) CurrentSpecial += 5;
+        if (Input.GetKeyDown(KeyCode.K)) CurrentSpecial -= 5;
 
         //Reload the scene
         if (Input.GetButtonDown("Reload")) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -136,6 +150,31 @@ public class GlobalVars : MonoBehaviour
         if (Input.GetButtonDown("Pause"))
         {
             SceneManager.LoadScene(MainMenu);
+        }
+    }
+
+    //Pause the game
+    void PauseGame()
+    {
+        if (Pause == true) Time.timeScale = 0;
+        else if (Time.timeScale == 0 && Pause == false) Time.timeScale = 1;
+    }
+
+    //Saves the game
+    void SaveGame()
+    {
+        if(Save == true)
+        {
+            Save = false;
+        }
+    }
+
+    //Loads the game
+    void LoadGame()
+    {
+        if (Load == true)
+        {
+            Load = false;
         }
     }
 }

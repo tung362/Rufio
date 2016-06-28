@@ -24,9 +24,12 @@ public class PlayerAnimation : MonoBehaviour
     public float SwordDamage = 50;
 
     private PlayerManager PM;
+    //Access to global vars
+    private GlobalVars Global;
 
     void Start()
     {
+        Global = FindObjectOfType<GlobalVars>();
         PM = GetComponent<PlayerManager>();
         TheAnimator = GetComponentInChildren<Animator>();
     }
@@ -176,7 +179,7 @@ public class PlayerAnimation : MonoBehaviour
 
         if (PM.DODGE == true)
         {
-            if(TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0 && TheAnimator.GetBool("IsGun") == false && TheAnimator.GetBool("ChangingWeapons") == false) TheAnimator.SetInteger("AttackID", 1);
+            if (TheAnimator.GetBool("Fall") == false && TheAnimator.GetInteger("HurtID") == 0 && TheAnimator.GetBool("IsGun") == false && TheAnimator.GetBool("ChangingWeapons") == false) TheAnimator.SetInteger("AttackID", 1);
         }
 
         if (PM.BLOCK == true)

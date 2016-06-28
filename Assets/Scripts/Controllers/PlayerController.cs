@@ -34,9 +34,12 @@ public class PlayerController : MonoBehaviour
     private Animator TheAnimator;
 
     private PlayerManager PM;
+    //Access to global vars
+    private GlobalVars Global;
 
     void Start ()
     {
+        Global = FindObjectOfType<GlobalVars>();
         PM = GetComponent<PlayerManager>();
         TheAnimator = GetComponentInChildren<Animator>();
         TheRigidbody = GetComponent<Rigidbody>();
@@ -168,6 +171,7 @@ public class PlayerController : MonoBehaviour
                 if(CollidedWall == null) TeleportDestination = transform.position + transform.forward * DashDistance;
                 TeleportMovement = new Vector3(transform.forward.x, 0, transform.forward.z) * DashSpeed;
                 gameObject.layer = LayerMask.NameToLayer("DodgeGhost"); //Ghost
+                Global.CurrentEnergy -= 20;
             }
             //Attack
             else if (TeleportID >= 2)
